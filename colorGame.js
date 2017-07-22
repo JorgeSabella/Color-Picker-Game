@@ -7,25 +7,37 @@ var colors = [
 	"rgb(0, 0, 255)",
 	"rgb(255, 0, 255)",
 ];
-//selcting the squares divs and saving them in all ina variable squares
-var squares = document.querySelectorAll(".square");
-//selecting the color that we want to find from the colors array
-var pickedColor = colors[3];
-//selecting the h1 span for changing its content to the color that we want to find
-var colorDisplay = document.querySelector("#colorDisplay");
-//changing the span content
-colorDisplay.textContent = pickedColor;
+var squares = document.querySelectorAll(".square"); //selcting the squares divs and saving them in all the variable squares
+var pickedColor = pickedColor(); //selecting the color that we want to find from the colors array
+var colorDisplay = document.querySelector("#colorDisplay"); //selecting the h1 span for changing its content to the color that we want to find
+var messageDisplay = document.querySelector("#message");
+
+colorDisplay.textContent = pickedColor; //changing the span content
 //loop to add content and funcionality of the squares divs
-for(var i = 0; i < squares.length; i++){
-	squares[i].style.backgroundColor = colors[i];
-	squares[i].addEventListener("click" , function(){
-		//grab color of clicked square
-		var clickedColor = this.style.backgroundColor;
-		//compare color to pickedColor
-		if(clickedColor === pickedColor){
-			alert("Correct!");
+for(var i = 0; i < squares.length; i++){	
+	squares[i].style.backgroundColor = colors[i]; //adding default colors
+	//adding the event for picking colors
+	squares[i].addEventListener("click" , function(){		
+		var clickedColor = this.style.backgroundColor; //grab color of clicked square
+		if(clickedColor === pickedColor){ //compare color to pickedColor
+			messageDisplay.textContent = "Correct!";
+			changeColors(clickedColor);
 		}else{
-			alert("Wrong!!!");
+			this.style.backgroundColor = "#232323";
+			messageDisplay.textContent = "Try Again";
 		}
 	});
+}
+
+function changeColors(color){
+	//loop through all squares
+	for(var i = 0; i < squares.length; i++){
+		//change each color to match fiven color
+		squares[i].style.backgroundColor = color;
+	}
+}
+
+function pickedColor(){
+	var random = Math.floor(Math.random() * colors.length);
+	return colors[random];
 }
