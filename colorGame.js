@@ -1,15 +1,46 @@
-//array of colors
-var colors = generateRandomColors(6);
+var numberOfSquares = 6;
+var colors = generateRandomColors(numberOfSquares);//array of colors
 var squares = document.querySelectorAll(".square"); //selcting the squares divs and saving them in all the variable squares
 var pickedColor = pickedRandomColor(); //selecting the color that we want to find from the colors array
 var colorDisplay = document.querySelector("#colorDisplay"); //selecting the h1 span for changing its content to the color that we want to find
 var messageDisplay = document.querySelector("#message");
 var h1 = document.querySelector("h1");
 var resetButton = document.querySelector("#reset");
+var easyBtn = document.querySelector("#easyBtn");
+var hardBtn = document.querySelector("#hardBtn");
+
+easyBtn.addEventListener("click", function(){
+	easyBtn.classList.add("selected");
+	hardBtn.classList.remove("selected");
+	numberOfSquares = 3;
+	colors = generateRandomColors(numberOfSquares);
+	pickedColor = pickedRandomColor();
+	colorDisplay.textContent = pickedColor;
+	for(var i = 0; i < squares.length; i++){
+		if(colors[i]){
+			squares[i].style.backgroundColor = colors[i];
+		} else{
+			squares[i].style.display = "none";
+		}
+	}
+});
+
+hardBtn.addEventListener("click", function(){
+	hardBtn.classList.add("selected");
+	easyBtn.classList.remove("selected");
+	numberOfSquares = 6;
+	colors = generateRandomColors(numberOfSquares);
+	pickedColor = pickedRandomColor();
+	colorDisplay.textContent = pickedColor;
+		for(var i = 0; i < squares.length; i++){
+			squares[i].style.backgroundColor = colors[i];
+			squares[i].style.display = "block";
+		}
+});
 
 resetButton.addEventListener("click", function(){
 	//generate new colors
-	colors = generateRandomColors(6);
+	colors = generateRandomColors(numberOfSquares);
 	//pick a new random colo from array
 	pickedColor = pickedRandomColor();
 	//change colorDisplay to match picked color
@@ -52,7 +83,6 @@ function changeColors(color){
 
 function pickedRandomColor(){
 	var random = Math.floor(Math.random() * colors.length);
-	console.log(random);
 	return colors[random];
 }
 

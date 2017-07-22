@@ -23,3 +23,7 @@ h1 {
 	text-align: center;
 	color: black;
 }
+
+.selected {
+	background-color: blue;
+}
