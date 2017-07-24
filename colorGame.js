@@ -21,10 +21,17 @@ function init(){
 function setupModeButtons(){
 	for(var i = 0; i < modeButtons.length; i++){
 		modeButtons[i].addEventListener("click", function(){
-			modeButtons[0].classList.remove("selected");
-			modeButtons[1].classList.remove("selected");
+			for(var j = 0; j < modeButtons.length; j++){
+				modeButtons[j].classList.remove("selected");
+			}
 			this.classList.add("selected");
-			this.textContent === "Easy" ? numberOfSquares = 3: numberOfSquares = 6;
+			if(this.textContent === "Easy"){
+				numberOfSquares = 3;
+			} else if (this.textContent === "Medium"){
+				numberOfSquares = 6;
+			} else{
+				numberOfSquares = 9;
+			}
 			//figure pu how many squares to show
 			//pick new colors
 			//pick a new pickedColor
