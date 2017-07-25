@@ -1,13 +1,15 @@
-var numberOfSquares = 6;
+var numberOfSquares = 6; // starts at medium level
 var colors = []//declaration of array of colors
-var pickedColor;
+var pickedColor; 
 var squares = document.querySelectorAll(".square"); //selcting the squares divs and saving them in all the variable squares
 var colorDisplay = document.querySelector("#colorDisplay"); //selecting the h1 span for changing its content to the color that we want to find
 var messageDisplay = document.querySelector("#message");
 var h1 = document.querySelector("h1");
-var resetButton = document.querySelector("#reset");
-var modeButtons = document.querySelectorAll(".mode");
-
+var resetButton = document.querySelector("#reset"); 
+var hexadecimal = document.querySelector("#hexadecimal"); // Button to change between Hex and RGB
+var modeButtons = document.querySelectorAll(".mode"); // Easy Medium and Hard Buttons
+var bool = true;
+//function to initialize all the game
 init();
 
 function init(){
@@ -45,16 +47,39 @@ function setupSquares(){
 		//adding the event for picking colors
 		squares[i].addEventListener("click" , function(){		
 			var clickedColor = this.style.backgroundColor; //grab color of clicked square
-			if(clickedColor === pickedColor){ //compare color to pickedColor
-				messageDisplay.textContent = "Correct!";
-				changeColors(clickedColor);
-				h1.style.backgroundColor = clickedColor;
-				resetButton.textContent = "Play Again?";
-			}else{
-				this.style.backgroundColor = "#232323";
-				messageDisplay.textContent = "Try Again";
+			if(hexadecimal.textContent === "Hexadecimal"){
+				if(clickedColor === pickedColor){ //compare color to pickedColor
+					messageDisplay.textContent = "Correct!";
+					changeColors(clickedColor);
+					h1.style.backgroundColor = clickedColor;
+					resetButton.textContent = "Play Again?";
+				}else{
+					this.style.backgroundColor = "#232323";
+					messageDisplay.textContent = "Try Again";
+				}
+			} else{
+				if(clickedColor === createRgbString(pickedColor)){ //compare color to pickedColor
+					messageDisplay.textContent = "Correct!";
+					changeColors(clickedColor);
+					h1.style.backgroundColor = clickedColor;
+					resetButton.textContent = "Play Again?";
+				}else{
+					this.style.backgroundColor = "#232323";
+					messageDisplay.textContent = "Try Again";
+				}
 			}
 		});
+	}
+}
+function checkIfWinner(clickedColor){
+	if(clickedColor === pickedColor){ //compare color to pickedColor
+		messageDisplay.textContent = "Correct!";
+		changeColors(clickedColor);
+		h1.style.backgroundColor = clickedColor;
+		resetButton.textContent = "Play Again?";
+	}else{
+		this.style.backgroundColor = "#232323";
+		messageDisplay.textContent = "Try Again";
 	}
 }
 
@@ -82,6 +107,20 @@ function reset(){
 resetButton.addEventListener("click", function(){
 	reset();
 });
+
+hexadecimal.addEventListener("click", function(){
+	//if that serves as a switch button to change modes
+	if(this.textContent === "Hexadecimal"){
+		this.textContent = "rgb";
+		bool = true;
+
+	} else{
+		this.textContent = "Hexadecimal";
+		bool = false;
+	}
+	reset();
+})
+
 
 function changeColors(color){
 	//loop through all squares
@@ -113,9 +152,41 @@ function generateRandomNumber(num){
 }
 
 function generateRandomColorString(){
+	if (hexadecimal.textContent === "Hexadecimal"){
+		var string = "rgb(";
+		string += generateRandomNumber(256) + ", ";
+		string += generateRandomNumber(256) + ", ";
+		string += generateRandomNumber(256) + ")"; 
+		return string;
+	} else {
+		var string = "#";
+		for(var i = 0; i < 6; i++){
+			string += generateRandomNumber(16).toString(16);
+		}
+		return string;
+	}
+}
+
+function createRgbString(hex){
+	var rbgObject = hexToRgb(hex);
 	var string = "rgb(";
-	string += generateRandomNumber(256) + ", ";
-	string += generateRandomNumber(256) + ", ";
-	string += generateRandomNumber(256) + ")"; 
+	string += rbgObject.r + ", ";
+	string += rbgObject.g + ", ";
+	string += rbgObject.b + ")"; 
 	return string;
+}
+
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }
